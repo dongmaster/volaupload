@@ -1,0 +1,11 @@
+[package]
+
+name = "volaupload"
+version = "0.0.1"
+authors = ["Sebastian Berntsson <sebastianberntsson@users.noreply.github.com>"]
+
+[dependencies.curl]
+
+curl-sys = "0.1.8"
+getopts = "0.2.3"
+rustc-serialize = "0.2.12"
