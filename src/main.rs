@@ -3,7 +3,6 @@
 extern crate curl;
 extern crate getopts;
 extern crate "rustc-serialize" as rustc_serialize;
-extern crate regex;
 
 use std::old_io::Command;
 use std::os;
@@ -12,7 +11,6 @@ use curl::http::handle as http;
 use curl::http::Response;
 use curl::ErrCode;
 use getopts::Options;
-use regex::Regex;
 use rustc_serialize::json::decode as json;
 
 const SERVER : &'static str = "volafile.io";
@@ -73,14 +71,8 @@ impl Session {
         let resp = self.get(&url).unwrap();
         let body = String::from_utf8_lossy(&resp.get_body());
         
-        let re = match Regex::new(r"Invalid room") {
-            Ok(re)      => re,
-            Err(err)    => panic!("RegExp failed, fuck you"),
-        };
-        
-        match re.is_match(body.as_slice()) {
-            true    => panic!("\n    Room does not exist. Try a valid room instead.\n"), // Invalid room url
-            false   => {} // Valid room url
+        if body.as_slice().contains("Invalid room") == true {
+            panic!("\n    Room does not exist. Try a valid room instead.\n"); // Invalid room url
         }
         
         json(&body).unwrap()
